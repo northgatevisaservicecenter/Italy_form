@@ -54,6 +54,8 @@
     </div>
 
     <form id="italyForm">
+        <input type="hidden" name="form_type" value="Italy">
+
         <div class="section-title">👤 Applicant Details</div>
         <div class="grid">
             <div class="input-group"><label>Full Name (as per Passport) *</label><input type="text" name="full_name" required></div>
@@ -162,7 +164,6 @@
     </form>
 </div>
 
-<!-- Modal Popup Box -->
 <div id="thankYouModal" class="modal-overlay">
     <div class="modal-box">
         <div class="success-icon">✔</div>
@@ -171,7 +172,6 @@
         
         <div class="modal-btn-group">
             <button class="submit-btn" onclick="window.location.reload()">Fill New Form</button>
-            <!-- Live Website Link -->
             <a href="https://northgatevisaservices.com/" class="home-btn">Go Back to Home</a>
         </div>
     </div>
@@ -188,8 +188,8 @@
         }
     }
 
-   
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwRS74xWfnYK-5tPEUosxFkRl9rDReHfyIVSiZwoUli-888EAXVW6OquQMA2tNpu7C0qA/exec'; 
+    // Is script URL ko aap central master macro link se badal sakti hain
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby5XvlfDL9hlpJ174N4uSx-pvWnInxauoIxw9eVLhYgmUqDt2_Arimd0EbRbHT8UejK/exec'; 
     const form = document.getElementById('italyForm');
     const btn = document.getElementById('submitBtn');
 
