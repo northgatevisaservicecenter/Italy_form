@@ -23,8 +23,18 @@
         input:focus, select:focus, textarea:focus { border-color: #008C45; outline: none; box-shadow: 0 0 5px rgba(0, 140, 69, 0.2); }
         .full-width { grid-column: 1 / -1; }
         
-        /* Study Permit section initially hidden */
-        #study_permit_section { display: none; }
+        /* Hidden Sections */
+        #study_permit_section, #refusal_details_container, #criminal_details_container { display: none; }
+
+        /* Conditional Section Styling for clear separation */
+        .conditional-fields {
+            background: #fafffa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #008C45;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
 
         .declaration-box { grid-column: 1 / -1; margin-top: 30px; padding: 20px; background: #fff9e6; border-radius: 8px; font-size: 14px; display: flex; align-items: flex-start; gap: 12px; border: 1px solid #ffeeba; text-align: left; width: 100%; box-sizing: border-box; }
         .declaration-box input[type="checkbox"] { width: 18px; height: 18px; margin: 0; margin-top: 2px; cursor: pointer; flex-shrink: 0; }
@@ -146,12 +156,41 @@
 
         <div class="section-title">🛡️ Additional Information</div>
         <div class="grid">
-            <div class="input-group"><label>Have you ever been refused a visa? *</label>
-                <select name="refusal" required><option value="No">No</option><option value="Yes">Yes</option></select>
+            <div class="input-group">
+                <label>Have you ever been refused a visa? *</label>
+                <select name="refusal" id="any_refusal" onchange="toggleRefusalDetails()" required>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
             </div>
-            <div class="input-group"><label>Any Criminal Record? *</label>
-                <select name="criminal" required><option value="No">No</option><option value="Yes">Yes</option></select>
+            <div class="input-group">
+                <label>Any Criminal Record? *</label>
+                <select name="criminal" id="criminal" onchange="toggleCriminalDetails()" required>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
             </div>
+
+            <div id="refusal_details_container" class="full-width conditional-fields">
+                <div class="grid" style="gap: 15px;">
+                    <div class="input-group">
+                        <label>Which Country? (Refusal) *</label>
+                        <input type="text" name="refused_country" id="refused_country" placeholder="e.g. Germany, France, USA">
+                    </div>
+                    <div class="input-group">
+                        <label>Reason for Refusal *</label>
+                        <input type="text" name="refused_reason" id="refused_reason" placeholder="e.g. Insufficient active documentation">
+                    </div>
+                </div>
+            </div>
+
+            <div id="criminal_details_container" class="full-width conditional-fields">
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Please provide Criminal Record Details / Reason *</label>
+                    <textarea name="criminal_details" id="criminal_details" rows="3" placeholder="Provide brief explanation about your record..."></textarea>
+                </div>
+            </div>
+
             <div class="input-group full-width"><label>Medical Conditions (if any)</label><input type="text" name="medical_info"></div>
         </div>
 
@@ -188,7 +227,42 @@
         }
     }
 
-    // Pure Clean Base Link without manual query text parameters
+    // Dynamic Visa Refusal Toggle for Italy Form
+    function toggleRefusalDetails() {
+        const refusalStatus = document.getElementById('any_refusal').value;
+        const container = document.getElementById('refusal_details_container');
+        const countryInput = document.getElementById('refused_country');
+        const reasonInput = document.getElementById('refused_reason');
+
+        if (refusalStatus === 'Yes') {
+            container.style.display = 'block';
+            countryInput.required = true;
+            reasonInput.required = true;
+        } else {
+            container.style.display = 'none';
+            countryInput.required = false;
+            reasonInput.required = false;
+            countryInput.value = '';
+            reasonInput.value = '';
+        }
+    }
+
+    // Dynamic Criminal Details Toggle for Italy Form
+    function toggleCriminalDetails() {
+        const criminalStatus = document.getElementById('criminal').value;
+        const container = document.getElementById('criminal_details_container');
+        const detailsInput = document.getElementById('criminal_details');
+
+        if (criminalStatus === 'Yes') {
+            container.style.display = 'block';
+            detailsInput.required = true;
+        } else {
+            container.style.display = 'none';
+            detailsInput.required = false;
+            detailsInput.value = '';
+        }
+    }
+
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwRS74xWfnYK-5tPEUosxFkRl9rDReHfyIVSiZwoUli-888EAXVW6OquQMA2tNpu7C0qA/exec'; 
     const form = document.getElementById('italyForm');
     const btn = document.getElementById('submitBtn');
@@ -201,13 +275,14 @@
         const formData = new FormData(form);
         const params = new URLSearchParams(formData);
         
-        // FIXED ROUTING PARAMETER: Force state injection inside parameters string safely
         params.set('form_type', 'Italy');
 
         fetch(scriptURL + "?" + params.toString(), { method: 'GET', mode: 'no-cors' })
         .then(() => {
             document.getElementById('thankYouModal').style.display = 'block';
             form.reset();
+            toggleRefusalDetails();
+            toggleCriminalDetails();
             btn.disabled = false;
             btn.innerHTML = "SUBMIT APPLICATION";
         })
