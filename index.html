@@ -86,7 +86,7 @@
             <div class="input-group"><label>Phone Number *</label><input type="text" name="phone" required></div>
         </div>
 
-        <div class="section-title">🇮🇹 Travel Details</div>
+        <div class="section-title">✈️ Travel Details</div>
         <div class="grid">
             <div class="input-group"><label>Purpose of Travel *</label>
                 <select name="travel_purpose" id="travel_purpose" onchange="toggleStudySection()" required>
@@ -158,7 +158,7 @@
         <div class="grid">
             <div class="input-group">
                 <label>Have you ever been refused a visa? *</label>
-                <select name="refusal" id="any_refusal" onchange="toggleRefusalDetails()" required>
+                <select name="any_refusal" id="any_refusal" onchange="toggleRefusalDetails()" required>
                     <option value="No">No</option>
                     <option value="Yes">Yes</option>
                 </select>
@@ -227,7 +227,6 @@
         }
     }
 
-    // Dynamic Visa Refusal Toggle for Italy Form
     function toggleRefusalDetails() {
         const refusalStatus = document.getElementById('any_refusal').value;
         const container = document.getElementById('refusal_details_container');
@@ -247,7 +246,6 @@
         }
     }
 
-    // Dynamic Criminal Details Toggle for Italy Form
     function toggleCriminalDetails() {
         const criminalStatus = document.getElementById('criminal').value;
         const container = document.getElementById('criminal_details_container');
