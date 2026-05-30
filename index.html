@@ -13,36 +13,47 @@
         .header h2 { color: #008C45; margin: 0; font-size: 24px; text-transform: uppercase; }
         .header p { color: #666; margin: 5px 0 0; font-size: 14px; }
         .section-title { background: #f0fff4; color: #008C45; padding: 12px 15px; border-radius: 5px; font-size: 18px; font-weight: bold; margin: 30px 0 15px 0; border-left: 5px solid #008C45; }
+        
         .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
         @media (min-width: 600px) { .grid { grid-template-columns: 1fr 1fr; } }
+        
         .input-group { margin-bottom: 15px; text-align: left; }
         label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px; color: #333; }
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; transition: 0.3s; }
         input:focus, select:focus, textarea:focus { border-color: #008C45; outline: none; box-shadow: 0 0 5px rgba(0, 140, 69, 0.2); }
         .full-width { grid-column: 1 / -1; }
-        #study_permit_section, #refusal_details_container, #criminal_details_container { display: none; }
-        .conditional-fields { background: #fafffa; padding: 15px; border-radius: 8px; border: 1px dashed #008C45; margin-top: 10px; margin-bottom: 15px; box-sizing: border-box; }
+        
+        /* Initially hidden sections */
+        #study_permit_section, #spouse_field, #children_field { display: none; }
+
         .declaration-box { grid-column: 1 / -1; margin-top: 30px; padding: 20px; background: #fff9e6; border-radius: 8px; font-size: 14px; display: flex; align-items: flex-start; gap: 12px; border: 1px solid #ffeeba; text-align: left; width: 100%; box-sizing: border-box; }
         .declaration-box input[type="checkbox"] { width: 18px; height: 18px; margin: 0; margin-top: 2px; cursor: pointer; flex-shrink: 0; }
         .declaration-box label { cursor: pointer; font-weight: 500; line-height: 1.4; margin: 0; }
+
         .submit-btn { width: 100%; padding: 18px; background-color: #008C45; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.3s ease; }
         .submit-btn:hover { background-color: #006b35; }
         .submit-btn:disabled { background-color: #cccccc; }
+        
+        /* Secondary Action Button style */
+        .modal-btn-secondary { width: 100%; padding: 15px; background-color: #f4f7f6; color: #333; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s ease; text-decoration: none; display: inline-block; box-sizing: border-box; }
+        .modal-btn-secondary:hover { background-color: #e2e8e6; }
+
         .modal-overlay { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
-        .modal-box { background: white; margin: 12% auto; padding: 40px; border-radius: 15px; width: 85%; max-width: 400px; text-align: center; }
+        .modal-box { background: white; margin: 12% auto; padding: 40px; border-radius: 15px; width: 85%; max-width: 400px; text-align: center; box-sizing: border-box; }
         .success-icon { font-size: 60px; color: #25D366; margin-bottom: 20px; }
-        .modal-btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; }
-        .home-btn { width: 100%; padding: 15px; background-color: #f4f7f6; color: #333; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s ease; text-decoration: none; display: inline-block; box-sizing: border-box; }
-        .home-btn:hover { background-color: #e4e6eb; }
     </style>
 </head>
 <body>
+
 <div class="form-container">
     <div class="logo-container"><img src="logo.png" alt="NorthGate Logo"></div>
-    <div class="header"><p><strong>ITALY VISA APPLICANT FORM</strong></p></div>
+    <div class="header">
+        <p><strong>ITALY VISA APPLICANT FORM</strong></p>
+    </div>
+
     <form id="italyForm">
         <input type="hidden" name="form_type" value="Italy">
-        
+
         <div class="section-title">👤 Applicant Details</div>
         <div class="grid">
             <div class="input-group"><label>Full Name (as per Passport) *</label><input type="text" name="full_name" required></div>
@@ -55,15 +66,15 @@
             <div class="input-group"><label>Passport Issue Date</label><input type="date" name="passport_issue"></div>
             <div class="input-group"><label>Passport Expiry Date</label><input type="date" name="passport_expiry"></div>
         </div>
-        
+
         <div class="section-title">📞 Contact Information</div>
         <div class="grid">
             <div class="input-group full-width"><label>Current Address *</label><input type="text" name="address" required></div>
             <div class="input-group"><label>Email Address *</label><input type="email" name="email" required></div>
             <div class="input-group"><label>Phone Number *</label><input type="text" name="phone" required></div>
         </div>
-        
-        <div class="section-title">✈️ Travel Details</div>
+
+        <div class="section-title">🇮🇹 Travel Details</div>
         <div class="grid">
             <div class="input-group"><label>Purpose of Travel *</label>
                 <select name="travel_purpose" id="travel_purpose" onchange="toggleStudySection()" required>
@@ -85,7 +96,24 @@
                 </select>
             </div>
         </div>
-        
+
+        <div class="section-title">👨‍👩‍👧 Family Information</div>
+        <div class="grid">
+            <div class="input-group">
+                <label>Marital Status *</label>
+                <select name="marital_status" onchange="toggleMaritalFields(this.value)" required>
+                    <option value="">Select</option>
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                    <option value="Divorced">Divorced</option>
+                    <option value="Widowed">Widowed</option>
+                </select>
+            </div>
+            <div class="input-group"><label>Number of Dependents *</label><input type="number" name="dependents" required></div>
+            <div class="input-group" id="spouse_field"><label>Spouse Name</label><input type="text" name="spouse_name"></div>
+            <div class="input-group full-width" id="children_field"><label>Children Details (Names & Ages)</label><textarea name="children_details" rows="2"></textarea></div>
+        </div>
+
         <div class="section-title">📚 Employment / Education</div>
         <div class="grid">
             <div class="input-group"><label>Occupation *</label><input type="text" name="edu_occupation" required></div>
@@ -93,7 +121,7 @@
             <div class="input-group full-width"><label>Employer Address</label><input type="text" name="edu_address"></div>
             <div class="input-group"><label>Employer Contact Number</label><input type="text" name="edu_contact"></div>
         </div>
-        
+
         <div class="section-title">💰 Sponsor / Expense Details</div>
         <div class="grid">
             <div class="input-group"><label>Who will cover expenses? *</label>
@@ -105,7 +133,7 @@
             <div class="input-group"><label>Sponsor Name (if any)</label><input type="text" name="sponsor_name"></div>
             <div class="input-group"><label>Relationship with Sponsor</label><input type="text" name="sponsor_relation"></div>
         </div>
-        
+
         <div class="section-title">💼 Employment / Financial Details</div>
         <div class="grid">
             <div class="input-group"><label>Occupation / Business *</label><input type="text" name="fin_occupation" required></div>
@@ -115,60 +143,38 @@
             <div class="input-group"><label>Bank Balance (Approx.) *</label><input type="text" name="fin_balance" required></div>
             <div class="input-group"><label>Sponsor Details (if any)</label><input type="text" name="fin_sponsor"></div>
         </div>
-        
+
         <div id="study_permit_section">
             <div class="section-title">🎓 Study Permit (If Applicable)</div>
             <div class="grid">
                 <div class="input-group"><label>Name of Institution / College</label><input type="text" name="college_name"></div>
                 <div class="input-group"><label>Program Name</label><input type="text" name="program_name"></div>
                 <div class="input-group"><label>Duration of Study</label><input type="text" name="study_duration"></div>
-                <div class="input-group"><label>Tuition Fee Paid?</label><select name="fee_paid"><option value="No">No</option><option value="Yes">Yes</option></select></div>
-                <div class="input-group"><label>GIC Available?</label><select name="gic_available"><option value="No">No</option><option value="Yes">Yes</option></select></div>
+                <div class="input-group"><label>Tuition Fee Paid?</label>
+                    <select name="fee_paid"><option value="No">No</option><option value="Yes">Yes</option></select>
+                </div>
+                <div class="input-group"><label>GIC Available?</label>
+                    <select name="gic_available"><option value="No">No</option><option value="Yes">Yes</option></select>
+                </div>
             </div>
         </div>
-        
+
         <div class="section-title">🛡️ Additional Information</div>
         <div class="grid">
-            <!-- Refusal Dropdown and its conditional box grouped together -->
-            <div class="full-width">
-                <div class="grid" style="grid-template-columns: 1fr;">
-                    <div class="input-group" style="margin-bottom:0;"><label>Have you ever been refused a visa? *</label>
-                        <select name="any_refusal" id="any_refusal" onchange="toggleRefusalDetails()" required>
-                            <option value="No">No</option>
-                            <option value="Yes">Yes</option>
-                        </select>
-                    </div>
-                </div>
-                <div id="refusal_details_container" class="conditional-fields">
-                    <div class="grid">
-                        <div class="input-group"><label>Which Country? (Refusal) *</label><input type="text" name="refused_country" id="refused_country" placeholder="e.g. Germany, France, USA"></div>
-                        <div class="input-group"><label>Reason for Refusal *</label><input type="text" name="refused_reason" id="refused_reason" placeholder="e.g. Insufficient active documentation"></div>
-                    </div>
-                </div>
+            <div class="input-group"><label>Have you ever been refused a visa? *</label>
+                <select name="refusal" required><option value="No">No</option><option value="Yes">Yes</option></select>
             </div>
-
-            <!-- Criminal Dropdown and its conditional box grouped together -->
-            <div class="full-width">
-                <div class="grid" style="grid-template-columns: 1fr;">
-                    <div class="input-group" style="margin-bottom:0;"><label>Any Criminal Record? *</label>
-                        <select name="criminal" id="criminal" onchange="toggleCriminalDetails()" required>
-                            <option value="No">No</option>
-                            <option value="Yes">Yes</option>
-                        </select>
-                    </div>
-                </div>
-                <div id="criminal_details_container" class="conditional-fields">
-                    <div class="input-group" style="margin-bottom: 0;"><label>Please provide Criminal Record Details / Reason *</label><textarea name="criminal_details" id="criminal_details" rows="3" placeholder="Provide brief explanation about your record..."></textarea></div>
-                </div>
+            <div class="input-group"><label>Any Criminal Record? *</label>
+                <select name="criminal" required><option value="No">No</option><option value="Yes">Yes</option></select>
             </div>
-
             <div class="input-group full-width"><label>Medical Conditions (if any)</label><input type="text" name="medical_info"></div>
         </div>
-        
+
         <div class="declaration-box">
             <input type="checkbox" id="agree" required>
             <label for="agree">I hereby declare that all the information provided is true and accurate to the best of my knowledge. I understand that providing false or misleading information may result in visa refusal.</label>
         </div>
+
         <button type="submit" id="submitBtn" class="submit-btn">SUBMIT APPLICATION</button>
     </form>
 </div>
@@ -176,85 +182,62 @@
 <div id="thankYouModal" class="modal-overlay">
     <div class="modal-box">
         <div class="success-icon">✔</div>
-        <h2>Success!</h2>
+        <h2 style="color:#008C45;">Success!</h2>
         <p>Your application has been submitted successfully. We will contact you soon.</p>
-        <div class="modal-btn-group">
-            <button class="submit-btn" onclick="window.location.reload()">Fill New Form</button>
-            <a href="https://northgatevisaservices.com/" class="home-btn">Go Back to Home</a>
-        </div>
+        
+        <button class="submit-btn" style="margin-top: 15px; padding: 14px; background-color: #008C45;" onclick="window.location.reload()">Fill New Form</button>
+        <a href="https://northgatevisaservices.com/" class="modal-btn-secondary">Go to Home </a>
     </div>
 </div>
 
 <script>
+    function toggleStudySection() {
+        const purpose = document.getElementById('travel_purpose').value;
+        const studySection = document.getElementById('study_permit_section');
+        if (purpose === 'Study') {
+            studySection.style.display = 'block';
+        } else {
+            studySection.style.display = 'none';
+        }
+    }
+
+    // Dynamic Marital Fields Toggle Function
+    function toggleMaritalFields(status) {
+        if (status === 'Single' || status === '') {
+            document.getElementById('spouse_field').style.display = 'none';
+            document.getElementById('children_field').style.display = 'none';
+        } else {
+            document.getElementById('spouse_field').style.display = 'block';
+            document.getElementById('children_field').style.display = 'block';
+        }
+    }
+
     const scriptURL = 'https://script.google.com/macros/s/AKfycbywkghKWMbtCjfX7GMrrfTHyO2EnpiYh0Kr2U5ItIkdNHh3sKsnBOaWg4VKtMWj4IKIeA/exec'; 
     const form = document.getElementById('italyForm');
     const btn = document.getElementById('submitBtn');
-    
-    function toggleStudySection() { 
-        const purpose = document.getElementById('travel_purpose').value; 
-        document.getElementById('study_permit_section').style.display = purpose === 'Study' ? 'block' : 'none'; 
-    }
-    function toggleRefusalDetails() {
-        const refusalStatus = document.getElementById('any_refusal').value;
-        const container = document.getElementById('refusal_details_container');
-        const countryInput = document.getElementById('refused_country');
-        const reasonInput = document.getElementById('refused_reason');
-        if (refusalStatus === 'Yes') { 
-            container.style.display = 'block'; 
-            countryInput.required = true; 
-            reasonInput.required = true; 
-        } 
-        else { 
-            container.style.display = 'none'; 
-            countryInput.required = false; 
-            countryInput.value = ''; 
-            reasonInput.value = ''; 
-        }
-    }
-    function toggleCriminalDetails() {
-        const criminalStatus = document.getElementById('criminal').value;
-        const container = document.getElementById('criminal_details_container');
-        const detailsInput = document.getElementById('criminal_details');
-        if (criminalStatus === 'Yes') { 
-            container.style.display = 'block'; 
-            detailsInput.required = true; 
-        } 
-        else { 
-            container.style.display = 'none'; 
-            detailsInput.required = false; 
-            detailsInput.value = '';
-        }
-    }
-    
+
     form.addEventListener('submit', e => {
-        e.preventDefault(); 
-        
-        btn.disabled = true; 
+        e.preventDefault();
+        btn.disabled = true;
         btn.innerHTML = "Processing...";
-        
-        const formData = new FormData(form); 
-        const params = new URLSearchParams(formData); 
-        params.set('form_type', 'Italy');
-        
+
+        const formData = new FormData(form);
+        const params = new URLSearchParams(formData);
+
         fetch(scriptURL + "?" + params.toString(), { method: 'GET', mode: 'no-cors' })
-        .then(() => { 
-            document.getElementById('thankYouModal').style.display = 'block'; 
-            form.reset(); 
-            toggleRefusalDetails(); 
-            toggleCriminalDetails(); 
-            btn.disabled = false; 
-            btn.innerHTML = "SUBMIT APPLICATION"; 
-        })
-        .catch(error => { 
-            console.error('Error!', error.message); 
-            alert("Submission failed."); 
-            btn.disabled = false; 
+        .then(() => {
+            document.getElementById('thankYouModal').style.display = 'block';
+            form.reset();
+            btn.disabled = false;
             btn.innerHTML = "SUBMIT APPLICATION";
+        })
+        .catch(error => {
+            console.error('Error!', error.message);
+            alert("Submission failed.");
+            btn.disabled = false;
         });
     });
-    
-    toggleRefusalDetails();
-    toggleCriminalDetails();
 </script>
+
 </body>
 </html>
